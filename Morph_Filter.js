@@ -2,18 +2,12 @@ inlets = 3;
 outlets = 4;
 
 // UI
-var background_rgb = [0, 0, 0, 0];
+var bg_rgba = [1, 1, 1, 1.];
 var curve_rgb = [0., 0., 0., 1.];
-
 var curve_width = 4.;
 var handle_width = 4.;
-
 var gradient_rgba = [0, 0, 0, 0.2];
-
 var handle_size = 10.;
-var handle_color = [0, 0, 0, 1.];
-
-var handleClicked = 0.;
 
 // Filter Coefficients
 var a_coeff = [0.177235, 0.354469, 0.177235];
@@ -40,12 +34,11 @@ var freq_grid = [100, 1000, 10000];
 var grid_color = [0., 0., 0., 1.];
 var grid_line = (1.);
 
-
 // Mouse
 var isDragging = false;
 var initialMouseX = 0;
 var initialMouseY = 0;
-
+var handleClicked = 0.;
 
 // Canvas
 var ui_width = box.rect[2] - box.rect[0];
@@ -79,14 +72,8 @@ function msg_float(val){
     mgraphics.redraw(); 
 }
 
-
 function half_samplerate() {
 	freq_hi = samplerate /2.;
-}
-
-function set_grid_line(val) {
-    grid_line = (val);
-    mgraphics.redraw();
 }
    
 fill_freq_consts();
@@ -106,16 +93,20 @@ function set_handle_width(val) {
     mgraphics.redraw();
 }
 
-/// COLORS
-
-function set_curve_rgba(r, g, b, a) {
-    curve_rgb = [r, g, b, a];
-    set_gradient_alpha(r, g, b, gradient_rgba[3]);
+function set_gradient_alpha(a) {
+    gradient_rgba[3] = (a);
     mgraphics.redraw();
 }
 
-function set_gradient_alpha(a) {
-    gradient_rgba = [curve_rgb[0], curve_rgb[1], curve_rgb[2], a];
+/// COLORS
+function set_bg_rgba(r, g, b, a) {
+    bg_rgba = [r,g,b,a];
+    mgraphics.redraw();
+}
+
+function set_curve_rgba(r, g, b, a) {
+    curve_rgb = [r, g, b, a];
+    gradient_rgba = [r, g, b, gradient_rgba[3]];
     mgraphics.redraw();
 }
 
@@ -126,11 +117,6 @@ function set_grid_rgba(r, g, b, a) {
 
 function set_handle_size(radius) {
     handle_size = (radius);
-    mgraphics.redraw();
-}
-
-function set_handle_rgba(r, g, b, a) {
-    handle_color = [r, g, b, a];
     mgraphics.redraw();
 }
 
@@ -362,10 +348,15 @@ function paint()
         rectangle(0, 0, ui_width, ui_height);
         fill();
 
+        // Draw Background
+        set_source_rgba(bg_rgba);
+        rectangle(0, 0, ui_width, ui_height);
+        fill();
+
+        // Draw Grid
         set_source_rgba(grid_color);
         set_line_width(grid_line);
         
-        // Draw Grid
         for (i = 0; i < freq_grid.length; i++)
         {
             var x = Math.round(freq2x(freq_grid[i]));
