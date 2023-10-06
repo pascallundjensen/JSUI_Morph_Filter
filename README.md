@@ -1,7 +1,10 @@
+# JSUI_Morph_Filter
+
 Open Morph_Filter.maxpat as instruction. 
 
 
 ### Main Features
+
 - Morph four filter types (lowpass, bandpass, highpass, bandstop)
 - Outputs biquad coefficients for [biquad~]
 - fully adjustable UI
